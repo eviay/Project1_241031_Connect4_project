@@ -1,11 +1,11 @@
+# main.py
+
 from typing import Callable
 import time
 from game_utils import PLAYER1, PLAYER2, PLAYER1_PRINT, PLAYER2_PRINT, GameState, MoveStatus, GenMove
 from game_utils import initialize_game_state, pretty_print_board, apply_player_action, check_end_state, check_move_status
 from agents.agent_human_user import user_move
-
-
-
+from agents.agent_random import generate_move_random as random_move
 
 def human_vs_agent(
     generate_move_1: GenMove,
@@ -34,16 +34,14 @@ def human_vs_agent(
             for player, player_name, gen_move, args in zip(
                 players, player_names, gen_moves, gen_args,
             ):
-                t0 = time.time()
                 print(pretty_print_board(board))
                 print(
                     f'{player_name} you are playing with {PLAYER1_PRINT if player == PLAYER1 else PLAYER2_PRINT}'
                 )
                 action, saved_state[player] = gen_move(
-                    board.copy(),  # copy board to be safe, even though agents shouldn't modify it
+                    board.copy(),  # 传入棋盘的副本，避免代理意外修改棋盘
                     player, saved_state[player], *args
                 )
-                print(f'Move time: {time.time() - t0:.3f}s')
 
                 move_status = check_move_status(board, action)
                 if move_status != MoveStatus.IS_VALID:
@@ -55,17 +53,17 @@ def human_vs_agent(
                 apply_player_action(board, action, player)
                 end_state = check_end_state(board, player)
 
-                if end_state != GameState.STILL_PLAYING:
+                if end_state == GameState.IS_WIN:
                     print(pretty_print_board(board))
-                    if end_state == GameState.IS_DRAW:
-                        print('Game ended in draw')
-                    else:
-                        print(
-                            f'{player_name} won playing {PLAYER1_PRINT if player == PLAYER1 else PLAYER2_PRINT}'
-                        )
+                    print(f'{player_name} won playing {PLAYER1_PRINT if player == PLAYER1 else PLAYER2_PRINT}!')
+                    playing = False
+                    break
+                elif end_state == GameState.IS_DRAW:
+                    print(pretty_print_board(board))
+                    print('Game ended in a draw.')
                     playing = False
                     break
 
-
 if __name__ == "__main__":
-    human_vs_agent(user_move)
+    # 设置人类玩家与随机代理对战
+    human_vs_agent(random_move, user_move)
