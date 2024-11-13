@@ -133,14 +133,15 @@ def connected_four(board: np.ndarray, player: BoardPiece) -> bool:
 # 检查当前游戏状态
 def check_end_state(board: np.ndarray, player: BoardPiece) -> GameState:
     """
-    判断当前游戏状态：是否有玩家胜利、平局或继续游戏。
+    Returns GameState.IS_WIN if `player` won the game, GameState.IS_DRAW if the game is a draw,
+    or GameState.STILL_PLAYING if the game is still ongoing.
     """
     if connected_four(board, player):
         return GameState.IS_WIN
-    elif np.all(board != NO_PLAYER):  # 检查是否所有格子已被填满
+    elif not np.any(board == NO_PLAYER):
         return GameState.IS_DRAW
-    else:
-        return GameState.STILL_PLAYING
+    return GameState.STILL_PLAYING
+
 
 # 检查玩家操作是否合法
 def check_move_status(board: np.ndarray, column: Any) -> MoveStatus:
