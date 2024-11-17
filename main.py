@@ -3,7 +3,10 @@ import time
 from game_utils import PLAYER1, PLAYER2, PLAYER1_PRINT, PLAYER2_PRINT, GameState, MoveStatus, GenMove
 from game_utils import initialize_game_state, pretty_print_board, apply_player_action, check_end_state, check_move_status
 from agents.agent_human_user import user_move
-from agents.agent_random import generate_move_random as random_move
+# from agents.agent_random import generate_move_random as random_move
+# from agents.agent_minimax import generate_move_minimax as minimax_move
+from agents.agent_mcts import generate_move_mcts as mcts_move
+
 
 def human_vs_agent(
     generate_move_1: GenMove,
@@ -64,5 +67,7 @@ def human_vs_agent(
 
 if __name__ == "__main__":
     # 设置人类玩家与随机代理对战
-    human_vs_agent(random_move, user_move)
->>>>>>> 6d7b9c6 (Finalize changes in week3_AgentImplement branch)
+    # human_vs_agent(random_move, user_move)
+    # human_vs_agent(minimax_move, user_move)
+    human_vs_agent(mcts_move, user_move)
+

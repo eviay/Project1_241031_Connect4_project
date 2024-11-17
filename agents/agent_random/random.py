@@ -1,7 +1,11 @@
 # agents/agent_random/random.py
 
 import numpy as np
-from game_utils import BoardPiece, PlayerAction, SavedState, MoveStatus, check_move_status
+from typing import Optional
+from game_utils import (
+    BoardPiece, PlayerAction, SavedState,
+    GameState, apply_player_action, MoveStatus, check_move_status, check_end_state, NO_PLAYER
+)
 
 def generate_move_random(
     board: np.ndarray, player: BoardPiece, saved_state: SavedState | None
